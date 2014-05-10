@@ -1,5 +1,5 @@
-MizchiPackageView = require '../lib/mizchi-package-view'
+GitGrepView = require '../lib/git-grep-view'
 
-describe "MizchiPackageView", ->
+describe "GitGrepView", ->
   it "has one valid test", ->
     expect("life").toBe "easy"

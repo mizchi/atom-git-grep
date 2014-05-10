@@ -1,10 +1,10 @@
 {
-  "name": "mizchi-package",
-  "main": "./lib/mizchi-package",
+  "name": "git-grep",
+  "main": "./lib/git-grep",
   "version": "0.0.0",
   "description": "A short description of your package",
-  "activationEvents": ["mizchi-package:toggle"],
-  "repository": "https://github.com/atom/mizchi-package",
+  "activationEvents": ["git-grep:grep"],
+  "repository": "https://github.com/atom/git-grep",
   "license": "MIT",
   "engines": {
     "atom": ">0.50.0"
