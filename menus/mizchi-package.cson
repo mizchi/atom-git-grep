@@ -1,15 +1,14 @@
-# See https://atom.io/docs/latest/creating-a-package#menus for more details
 'context-menu':
   '.overlayer':
-      'Enable mizchi-package': 'mizchi-package:toggle'
+      'Enable git-grep': 'git-grep:grep'
 
 'menu': [
   {
     'label': 'Packages'
     'submenu': [
-      'label': 'mizchi-package'
+      'label': 'git-grep'
       'submenu': [
-        { 'label': 'Toggle', 'command': 'mizchi-package:toggle' }
+        { 'label': 'GitGrep', 'command': 'git-grep:grep' }
       ]
     ]
   }

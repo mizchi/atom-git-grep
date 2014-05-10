@@ -8,7 +8,7 @@ class Line
   constructor: ({@line, @filePath, @content}) ->
 
 module.exports =
-class MizchiPackageView extends SelectListView
+class GitGrepView extends SelectListView
 
   initialize: (serializeState) ->
     super
