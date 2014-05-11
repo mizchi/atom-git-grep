@@ -1,25 +1,15 @@
 {View} = require 'atom'
-{exec} = require 'child_process'
 {SelectListView} = require 'atom'
 path = require 'path'
 {$$, Point, SelectListView} = require 'atom'
 
-class Line
-  constructor: ({@line, @filePath, @content}) ->
-
 module.exports =
 class GitGrepView extends SelectListView
+  getFilterKey: -> 'filePath'
 
   initialize: (serializeState) ->
     super
-    @minQuerySize = 3 # TODO: inject params as setting
     @addClass('git-grep overlay from-top')
-
-    @filterEditorView.getEditor().getBuffer().on 'changed', =>
-      query = @filterEditorView.getEditor().getText()
-      if query.length >= @minQuerySize
-        @startGrep(query)
-      true
 
   viewForItem: (line) ->
     """<li>
@@ -31,7 +21,7 @@ class GitGrepView extends SelectListView
     </li>"""
 
   confirmed: (item) ->
-    @openPath (path.join atom.project.rootDirectory.path, item.filePath), item.line
+    @openPath (path.join atom.project.rootDirectory.path, item.filePath), item.line-1
     @hide()
 
   serialize: ->
@@ -50,14 +40,3 @@ class GitGrepView extends SelectListView
 
   destroy: ->
     @detach()
-
-  getFilterKey: -> 'filePath'
-
-  startGrep: (query = '') ->
-    console.log 'start grep, query', query
-    @setItems([])
-    exec "git grep -n #{query}", {cwd: atom.project.rootDirectory.path}, (err, stdout, stderr) =>
-      lines = stdout.split('\n').map (line) =>
-        [filePath, line, content] = line.replace(/(\:| \\\:)/g, "$sp$").split("$sp$")
-        new Line {filePath, line, content}
-      @setItems lines.filter (line) => line.filePath

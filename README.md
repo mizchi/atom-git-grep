@@ -1,4 +1,4 @@
-# mizchi-package package
+# git-grep package
 
 A short description of your package.
 

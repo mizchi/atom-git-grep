@@ -1,5 +1,10 @@
 GitGrepView = require './git-grep-view'
-{EditorView} = require 'atom'
+GitGrepDialogView = require './git-grep-dialog-view'
+{exec} = require 'child_process'
+path = require 'path'
+
+class Line
+  constructor: ({@line, @filePath, @content, @raw}) ->
 
 module.exports =
   gitGrepView: null
@@ -11,13 +16,34 @@ module.exports =
     if @view.hasParent()
       @view.detach()
     else
-      atom.workspaceView.append(@view)
-      @view.show()
-      @view.startGrep()
-      @view.focusFilterEditor()
+      @dialog ?= new GitGrepDialogView
+        onConfirm: (query) =>
+          @_grep query, (lines) =>
+            @view.show()
+            atom.workspaceView.append(@view)
+            @view.setItems(lines)
+            @view.focusFilterEditor()
+      @dialog.show()
+      @dialog.attach()
 
   deactivate: ->
     @gitGrepView.destroy()
 
   serialize: ->
     gitGrepViewState: @gitGrepView.serialize()
+
+  parseGitGrep: (stdout)->
+    for line in stdout.split('\n') when line.length > 5
+      # [filePath, line, content] = line.replace(/(\:|!(\\\\:))/g, "$sp$").split("$sp$")
+      [filePath, content] = line.split /\:\d+\:/
+      at = parseInt(line.match(/\:\d+\:/)[0][1..line.length-2], 10)
+      new Line {filePath, line:at, content, raw: line}
+
+  _grep: (query, callback) ->
+    command = "git grep -n --no-color #{query}"
+    exec command, {cwd: atom.project.rootDirectory.path}, (err, stdout, stderr) =>
+      if err or stderr
+        throw err if err
+        throw stderr if stderr
+      lines = @parseGitGrep(stdout)
+      callback lines
