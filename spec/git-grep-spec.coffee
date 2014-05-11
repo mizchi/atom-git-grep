@@ -16,11 +16,8 @@ describe "GitGrep", ->
   describe "when the git-grep:grep event is triggered", ->
     it "attaches and then detaches the view", ->
       expect(atom.workspaceView.find('.git-grep-dialog')).not.toExist()
-
       atom.workspaceView.trigger 'git-grep:grep'
-
       waitsForPromise ->
         activationPromise
-
       runs ->
         expect(atom.workspaceView.find('.git-grep-dialog')).toExist()
