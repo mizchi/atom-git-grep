@@ -12,22 +12,22 @@ module.exports =
     atom.workspaceView.command "git-grep:grep", => @grep(state)
 
   grep: (state) ->
-    @view ?= new GitGrepView(state.GitGrepViewState)
-    if @view.hasParent()
-      @view.detach()
+    @gitGrepView ?= new GitGrepView(state.GitGrepViewState)
+    if @gitGrepView.hasParent()
+      @gitGrepView.detach()
     else
       @dialog ?= new GitGrepDialogView
         onConfirm: (query) =>
           @_grep query, (lines) =>
-            @view.show()
-            atom.workspaceView.append(@view)
-            @view.setItems(lines)
-            @view.focusFilterEditor()
+            @gitGrepView.show()
+            atom.workspaceView.append(@gitGrepView)
+            @gitGrepView.setItems(lines)
+            @gitGrepView.focusFilterEditor()
       @dialog.show()
       @dialog.attach()
 
   deactivate: ->
-    @gitGrepView.destroy()
+    @gitGrepView?.remove()
 
   serialize: ->
     gitGrepViewState: @gitGrepView.serialize()
