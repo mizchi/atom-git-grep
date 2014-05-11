@@ -42,8 +42,10 @@ module.exports =
   _grep: (query, callback) ->
     command = "git grep -n --no-color #{query}"
     exec command, {cwd: atom.project.rootDirectory.path}, (err, stdout, stderr) =>
-      if err or stderr
-        throw err if err
+      if err
+        return callback []
+
+      if stderr
         throw stderr if stderr
       lines = @parseGitGrep(stdout)
       callback lines
