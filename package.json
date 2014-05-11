@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "description": "A short description of your package",
   "activationEvents": ["git-grep:grep"],
-  "repository": "git://github.com/atom/git-grep",
+  "repository": "git://github.com/mizchi/atom-git-grep",
   "license": "MIT",
   "engines": {
     "atom": ">0.50.0"
