@@ -17,6 +17,7 @@ module.exports =
       @gitGrepView.detach()
     else
       @dialog = new GitGrepDialogView
+        rootPath: atom.project.rootDirectory.path
         onConfirm: (query) =>
           @_grep query, (lines) =>
             @gitGrepView.show()
@@ -33,7 +34,6 @@ module.exports =
 
   parseGitGrep: (stdout)->
     for line in stdout.split('\n') when line.length > 5
-      # [filePath, line, content] = line.replace(/(\:|!(\\\\:))/g, "$sp$").split("$sp$")
       [filePath, content] = line.split /\:\d+\:/
       at = parseInt(line.match(/\:\d+\:/)[0][1..line.length-2], 10)
       new Line {filePath, line:at, content, raw: line}
