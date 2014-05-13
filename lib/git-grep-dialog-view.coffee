@@ -22,6 +22,7 @@ class GitGrepDialog extends View
 
   close: ->
     @hide()
+    @remove()
     atom.workspaceView.focus()
 
   cancel: ->

@@ -16,14 +16,13 @@ module.exports =
     if @gitGrepView.hasParent()
       @gitGrepView.detach()
     else
-      @dialog ?= new GitGrepDialogView
+      @dialog = new GitGrepDialogView
         onConfirm: (query) =>
           @_grep query, (lines) =>
             @gitGrepView.show()
             atom.workspaceView.append(@gitGrepView)
             @gitGrepView.setItems(lines)
             @gitGrepView.focusFilterEditor()
-      @dialog.show()
       @dialog.attach()
 
   deactivate: ->
