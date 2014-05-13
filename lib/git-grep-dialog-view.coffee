@@ -2,9 +2,9 @@
 
 module.exports =
 class GitGrepDialog extends View
-  @content: ->
+  @content: (params) ->
     @div class: 'git-grep-dialog overlay from-top', =>
-      @label 'git grep'
+      @label "git grep: #{params.rootPath}"
       @subview 'miniEditor', new EditorView(mini: true)
 
   initialize: ({@onConfirm}) ->
