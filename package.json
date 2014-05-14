@@ -2,7 +2,7 @@
   "name": "git-grep",
   "main": "./lib/git-grep",
   "version": "0.3.0",
-  "description": "A short description of your package",
+  "description": "`git grep` in atom editor",
   "activationEvents": [
     "git-grep:grep"
   ],
