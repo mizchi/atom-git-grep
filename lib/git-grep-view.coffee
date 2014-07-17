@@ -13,11 +13,11 @@ class GitGrepView extends SelectListView
 
   viewForItem: (line) ->
     """<li>
-      <span style="color:white">#{line.filePath}</span>
+      <span class='path'>#{line.filePath}</span>
       :
-      <span style="color:linen">L#{line.line}</span>
+      <span class='line-number'>L#{line.line}</span>
       :
-      <span style="color:grey">#{line.content}</span>
+      <span class='content'>#{line.content}</span>
     </li>"""
 
   confirmed: (item) ->
