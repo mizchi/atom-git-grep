@@ -17,7 +17,8 @@ module.exports =
       @gitGrepView.detach()
     else
       @dialog = new GitGrepDialogView
-        rootPath: atom.project.rootDirectory.path
+        # TODO: fix for multi root
+        rootPath: atom.project.rootDirectories[0].path
         onConfirm: (query) =>
           @_grep query, (lines) =>
             @gitGrepView.show()
@@ -40,7 +41,7 @@ module.exports =
 
   _grep: (query, callback) ->
     command = "git grep -n --no-color #{query}"
-    exec command, {cwd: atom.project.rootDirectory.path}, (err, stdout, stderr) =>
+    exec command, {cwd: atom.project.rootDirectories[0].path}, (err, stdout, stderr) =>
       if err
         return callback []
 

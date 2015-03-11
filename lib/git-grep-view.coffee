@@ -21,7 +21,7 @@ class GitGrepView extends SelectListView
     </li>"""
 
   confirmed: (item) ->
-    @openPath (path.join atom.project.rootDirectory.path, item.filePath), item.line-1
+    @openPath (path.join atom.project.rootDirectories[0].path, item.filePath), item.line-1
     @hide()
 
   serialize: ->
