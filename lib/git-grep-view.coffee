@@ -16,7 +16,9 @@ class GitGrepView extends SelectListView
       #{line.filePath}
       :
       <span class='text-info'>L#{line.line}</span>
-      :
+      /
+      <span class='text-info'>L#{line.rootPath}</span>
+      <br/>
       <span class='text-subtle'>#{line.content}</span>
     </li>"""
 

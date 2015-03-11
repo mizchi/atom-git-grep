@@ -11,5 +11,7 @@
   "engines": {
     "atom": ">0.50.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "lodash.flatten": "^3.0.1"
+  }
 }

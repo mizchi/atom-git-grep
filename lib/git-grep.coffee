@@ -2,6 +2,7 @@ GitGrepView = require './git-grep-view'
 GitGrepDialogView = require './git-grep-dialog-view'
 {exec} = require 'child_process'
 path = require 'path'
+flatten = require 'lodash.flatten'
 
 class Line
   constructor: ({@line, @filePath, @content, @raw}) ->
@@ -16,11 +17,16 @@ module.exports =
     if @gitGrepView.hasParent()
       @gitGrepView.detach()
     else
+      rootPaths = atom.project.rootDirectories.map (root) -> root.path
+      rootPath = rootPaths[0]
+
       @dialog = new GitGrepDialogView
-        # TODO: fix for multi root
-        rootPath: atom.project.rootDirectories[0].path
+        rootPaths: rootPaths
         onConfirm: (query) =>
-          @_grep query, (lines) =>
+          Promise.all(
+            rootPaths.map (rootPath) => @_grep(rootPath, query)
+          ).then (chunks) =>
+            lines = flatten chunks
             @gitGrepView.show()
             atom.workspaceView.append(@gitGrepView)
             @gitGrepView.setItems(lines)
@@ -33,19 +39,18 @@ module.exports =
   serialize: ->
     gitGrepViewState: @gitGrepView.serialize()
 
-  parseGitGrep: (stdout)->
+  parseGitGrep: (stdout) ->
     for line in stdout.split('\n') when line.length > 5
       [filePath, content] = line.split /\:\d+\:/
       at = parseInt(line.match(/\:\d+\:/)[0][1..line.length-2], 10)
-      new Line {filePath, line:at, content, raw: line}
+      new Line {filePath, rootPath: null, line: at, content, raw: line}
 
-  _grep: (query, callback) ->
+  _grep: (rootPath, query) -> new Promise (done, reject) =>
     command = "git grep -n --no-color #{query}"
-    exec command, {cwd: atom.project.rootDirectories[0].path}, (err, stdout, stderr) =>
-      if err
-        return callback []
-
-      if stderr
-        throw stderr if stderr
-      lines = @parseGitGrep(stdout)
-      callback lines
+    exec command, {cwd: rootPath}, (err, stdout, stderr) =>
+      if err then return done [] # no item
+      if stderr then return reject(stderr)
+      lines = @parseGitGrep(stdout).map (line) ->
+        line.rootPath = rootPath
+        line
+      done(lines)
