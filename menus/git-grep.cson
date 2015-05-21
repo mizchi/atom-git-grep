@@ -1,6 +1,10 @@
 'context-menu':
-  '.overlayer':
-      'Enable git-grep': 'git-grep:grep'
+  '.overlayer': [
+    {
+      'label': 'Enable git-grep'
+      'command': 'git-grep:grep'
+    }
+  ]
 
 'menu': [
   {

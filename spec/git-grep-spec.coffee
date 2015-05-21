@@ -7,17 +7,17 @@ GitGrep = require '../lib/git-grep'
 # or `fdescribe`). Remove the `f` to unfocus the block.
 
 describe "GitGrep", ->
-  activationPromise = null
+  [workspaceElement, activationPromise] = []
 
   beforeEach ->
-    atom.workspaceView = new WorkspaceView
+    workspaceElement = atom.views.getView(atom.workspace)
     activationPromise = atom.packages.activatePackage('git-grep')
 
   describe "when the git-grep:grep event is triggered", ->
     it "attaches and then detaches the view", ->
-      expect(atom.workspaceView.find('.git-grep-dialog')).not.toExist()
-      atom.workspaceView.trigger 'git-grep:grep'
+      expect(workspaceElement.querySelector('.git-grep-dialog')).not.toExist()
+      atom.commands.dispatch workspaceElement, 'git-grep:grep'
       waitsForPromise ->
         activationPromise
       runs ->
-        expect(atom.workspaceView.find('.git-grep-dialog')).toExist()
+        expect(workspaceElement.querySelector('.git-grep-dialog')).toExist()

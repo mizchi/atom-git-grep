@@ -1,4 +1,4 @@
-{$, EditorView, View} = require 'atom'
+{$, TextEditorView, View} = require 'atom-space-pen-views'
 
 module.exports =
 class GitGrepDialog extends View
@@ -6,25 +6,27 @@ class GitGrepDialog extends View
     path = params.rootPaths.join(' / ')
     @div class: 'git-grep-dialog overlay from-top', =>
       @label "git grep: #{path}"
-      @subview 'miniEditor', new EditorView(mini: true)
+      @subview 'miniEditor', new TextEditorView(mini: true)
 
   initialize: ({@onConfirm}) ->
-    @on 'core:confirm', =>
-      @onConfirm(@miniEditor.getText())
-      @close()
+    atom.commands.add @element,
+      'core:confirm': =>
+        @onConfirm(@miniEditor.getText())
+        @close()
+      'core:cancel': =>
+        @cancel()
 
-    @on 'core:cancel', => @cancel()
-    @miniEditor.hiddenInput.on 'focusout', => @close()
+    @miniEditor.on 'focusout', => @close()
 
   attach: ->
     @miniEditor.setText('')
-    atom.workspaceView.append(this)
+    atom.views.getView(atom.workspace).appendChild(@element)
     @miniEditor.focus()
 
   close: ->
     @hide()
     @remove()
-    atom.workspaceView.focus()
+    #$(atom.views.getView(atom.workspace)).focus()
 
   cancel: ->
     @hide()

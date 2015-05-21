@@ -1,7 +1,6 @@
-{View} = require 'atom'
-{SelectListView} = require 'atom'
+{$$, View, SelectListView} = require 'atom-space-pen-views'
+{Point} = require 'atom'
 path = require 'path'
-{$$, Point, SelectListView} = require 'atom'
 
 module.exports =
 class GitGrepView extends SelectListView
@@ -30,15 +29,15 @@ class GitGrepView extends SelectListView
 
   openPath: (filePath, lineNumber) ->
     if filePath
-      atom.workspaceView.open(filePath).done => @moveToLine(lineNumber)
+      atom.workspace.open(filePath).done => @moveToLine(lineNumber)
 
   moveToLine: (lineNumber=-1) ->
     return unless lineNumber >= 0
-    if editorView = atom.workspaceView.getActiveView()
+    if editor = atom.workspace.getActiveTextEditor()
       position = new Point(lineNumber)
-      editorView.scrollToBufferPosition(position, center: true)
-      editorView.editor.setCursorBufferPosition(position)
-      editorView.editor.moveCursorToFirstCharacterOfLine()
+      editor.scrollToBufferPosition(position, center: true)
+      editor.setCursorBufferPosition(position)
+      editor.moveToFirstCharacterOfLine()
 
   destroy: ->
     @detach()

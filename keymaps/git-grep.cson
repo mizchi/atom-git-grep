@@ -1,2 +1,2 @@
-'.workspace':
+'atom-workspace':
   'cmd-k cmd-g': 'git-grep:grep'
