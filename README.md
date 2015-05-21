@@ -12,11 +12,11 @@ apm install git-grep
 
 ## How to use
 
-Set your keybind.cson as you like.
+Set your keymap.cson as you like.
 
 ```coffee
-'.workspace':
+'atom-workspace':
   'cmd-k cmd-g': 'git-grep:grep' # default
 ```
 
-Root of `git grep` is always current root of workspace. 
+Root of `git grep` is always current root of workspace.

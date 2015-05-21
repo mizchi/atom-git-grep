@@ -3,6 +3,7 @@ GitGrepDialogView = require './git-grep-dialog-view'
 {exec} = require 'child_process'
 path = require 'path'
 flatten = require 'lodash.flatten'
+{CompositeDisposable} = require 'atom'
 
 class Line
   constructor: ({@line, @filePath, @content, @raw}) ->
@@ -10,7 +11,9 @@ class Line
 module.exports =
   gitGrepView: null
   activate: (state) ->
-    atom.workspaceView.command "git-grep:grep", => @grep(state)
+    @subscriptions = new CompositeDisposable
+    @subscriptions.add atom.commands.add 'atom-workspace',
+      'git-grep:grep': => @grep(state)
 
   grep: (state) ->
     @gitGrepView ?= new GitGrepView(state.GitGrepViewState)
@@ -28,13 +31,14 @@ module.exports =
           ).then (chunks) =>
             lines = flatten chunks
             @gitGrepView.show()
-            atom.workspaceView.append(@gitGrepView)
+            @gitGrepView.appendTo(atom.views.getView(atom.workspace))
             @gitGrepView.setItems(lines)
             @gitGrepView.focusFilterEditor()
       @dialog.attach()
 
   deactivate: ->
     @gitGrepView?.remove()
+    @subscriptions?.dispose()
 
   serialize: ->
     gitGrepViewState: @gitGrepView.serialize()
